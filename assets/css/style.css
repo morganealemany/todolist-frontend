@@ -19,6 +19,23 @@ u {
     color: lightgrey;
 }
 
-.archive {
+.font_archive {
     color : grey;
 }
+
+.max_bar {
+    background-color : lightgrey;
+    height: 5px;
+    width : 100%;
+    
+}
+
+.progress_bar {
+    background-color : #F0C31D;
+    height : 5px;
+}
+ .progress_bar_archive {
+     background-color: grey;
+ }
+
+
