@@ -2,6 +2,18 @@
 
     font-size : 2em;
 }
+
 #navbarNav {
     justify-content: flex-end;
 }
+
+.active, .btn-mustard {
+    background-color: #F0C31D;
+}
+
+u {
+    color: #F0C31D;
+}
+
+
+
