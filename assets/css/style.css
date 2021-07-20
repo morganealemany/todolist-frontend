@@ -1,0 +1,7 @@
+.navbar-brand {
+
+    font-size : 2em;
+}
+#navbarNav {
+    justify-content: flex-end;
+}
