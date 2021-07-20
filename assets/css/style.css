@@ -15,5 +15,10 @@ u {
     color: #F0C31D;
 }
 
+.category {
+    color: lightgrey;
+}
 
-
+.archive {
+    color : grey;
+}
