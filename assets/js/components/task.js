@@ -3,39 +3,41 @@
  */
 const task = {
 
-    //===========================================
-    //                  EVENTS
-    //===========================================
+    // #############################################################
+    //                            EVENTS
+    // #############################################################
+
     /**
-     * Ajout de tous les couteurs d'événements liées à une tâche
+     * Ajoute tous les écouteurs d'évènements liés à une tâche
      * 
-     * @param {HTMLElement} taskElement // L'élément du DOM correspondant à la tâche
+     * @param {HTMLElement} taskElement L'élément du DOM correspond à la tâche
      */
     bindSingleTaskEvents: function(taskElement) {
 
-        // ------------------------------------------------------
-        // Ecoute de l'événement permettant l'édition du titre de la tâche
-        // ------------------------------------------------------
+        // ----------------------------------------------------------------
+        // Ecoute de l'évènement permettant l'édition du titre de la tâche
+        // ----------------------------------------------------------------
+        // On récupère l'élément du DOM correspondant au titre de la tâche
         const taskTitleLabelElement = taskElement.querySelector('.task__title-label');
+        // Dès qu'on clique sur le titre de la tâche, on passe en mode édition
+        taskTitleLabelElement.addEventListener('click', task.handleEnableTaskTitleEditMode);
 
-        // Dès qu'on clique sur le titre on passe en mode édition
-        taskTitleLabelElement.addEventListener('click',task.handleEnableTaskTitleEditMode);
-
-        // ------------------------------------------------------
-        // Ecoute de l'événement permettant de valider le nouveau nom de la tâche
-        // ------------------------------------------------------
-
+        // ----------------------------------------------------------------
+        // Ecoute de l'évènement permettant de valider le nouveau nom de
+        // la tâche
+        // ----------------------------------------------------------------
+        // On récupère le champ input permettant de modifier le titre de la tâche
         const taskTitleFieldElement = taskElement.querySelector('.task__title-field');
         // On ajoute l'écoute de la perte de focus du champ (par exemple, si on clique
         // en dehors du champ input)
         taskTitleFieldElement.addEventListener('blur', task.handleValidateNewTaskTitle);
 
+        // On ajoute l'écoute de la saisie d'une touche du clavier
         taskTitleFieldElement.addEventListener('keydown', task.handleValideNewTaskTitleOnEnterKey);
-
     },
 
     /**
-     * Méthode gérant le passage en mode éditon du titre de la tâche
+     * Méthode gérant le passage en mode édition du titre de la tâche
      * 
      * @param {Event} evt 
      */
@@ -44,22 +46,28 @@ const task = {
         // - Pour passer visuellement en mode édition du titre de la tâche, on va devoir
         // ajouter la classe 'task--edit' sur l'élément tâche
         // - Pour cela, on a donc besoin d'accéder à l'élément tâche contenant l'élément titre
-
-        // On commence par récupérer l'élément titre sur lequel l'événement click s'est produit
         
+        // On commence par récupérer l'élément titre sur lequel l'évènement click s'est produit
         const taskTitleLabelElement = evt.currentTarget;
 
-        // On cherche ensuite dans les ancêtres de l'élément titre, le premier élément du DOM qui possède la classe 'task'
+        // On chercher ensuite dans les ancêtres de l'élément titre, le premier élément du DOM
+        // qui possède la classe 'task'
+        // Doc de closest : https://developer.mozilla.org/fr/docs/Web/API/Element/closest
         const taskElement = taskTitleLabelElement.closest('.task');
 
-        // Enfin on ajoute la classe 'task--edit' sur l'élément de tâche
+        // Enfin, on ajoute la classe 'task--edit' sur l'élément de tâche
+        // Doc de classList : https://developer.mozilla.org/fr/docs/Web/API/Element/classList
         taskElement.classList.add('task--edit');
 
+        // Bonus UX : on met le focus sur le champ input pour pouvoir directement
+        // modifier le titre de la tâche sans avoir à cliquer une deuxième fois
+        // dans le champ
+        // Doc : https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus
         taskElement.querySelector('.task__title-field').focus();
     },
 
     /**
-     * Méthode gérant la validation du nouveau titre de la tâche sur l'événement 'blur'
+     * Méthode gérant la validation du nouveau titre de la tâche sur l'évènement 'blur'
      * 
      * @param {Event} evt 
      */
@@ -81,12 +89,12 @@ const task = {
         // Pour quitter le mode édition, il faut enlever la classe 'task--edit'
         // sur l'élément 'task'
         const taskElement = taskTitleFieldElement.closest('.task');
-    
-        taskElement.classList.remove('task--edit')
+        taskElement.classList.remove('task--edit');
     },
 
     /**
-     * Méthode gérant la validation du nouveau titre de la tâche sur l'événement 'keydown' (seule la touche Entrée permettra de valider la modification)
+     * Méthode gérant la validation du nouveau titre de la tâche sur l'évènement 'keydown'
+     * (seule la touche Entrée qui permettra de valider la modification)
      * 
      * @param {Event} evt 
      */
@@ -99,6 +107,5 @@ const task = {
         if (evt.key === 'Enter') {
             task.handleValidateNewTaskTitle(evt);
         }
-    }
-
+    },
 };

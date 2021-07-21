@@ -15,10 +15,15 @@
   <link rel="stylesheet" href="assets/css/bulma.css" />
   <link rel="stylesheet" href="assets/css/style.css" />
 
+  <!-- Avec defer, plus besoin de charger nos javascripts juste avant la fermeture de la balise body.
+  Le navigateur optimise le chargement au mieux : 
+  - avec defer, le fichier javascript est récupéré pendant la parsing du HTML
+  puis exécuté dès que le parsing du HTML est terminé
+  - les fichiers JS seront exécutés dans l'ordre de leur déclaration
+  - détails et schémas comparatifs : https://flaviocopes.com/javascript-async-defer/#performance-comparison -->
   <script defer src="assets/js/app.js"></script>
   <script defer src="assets/js/components/task.js"></script>
   <script defer src="assets/js/components/tasksList.js"></script>
-  
 </head>
 
 <body>
