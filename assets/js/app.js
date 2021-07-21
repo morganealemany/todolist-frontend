@@ -7,7 +7,7 @@ const app = {
      * La méthode init contient le code que l'on veut exécuter au lancement de l'application
      */
     init: function() {
-        console.log('Init !');
+        tasksList.init();
     }
 };  
 
