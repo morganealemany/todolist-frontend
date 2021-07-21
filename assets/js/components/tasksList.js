@@ -26,7 +26,7 @@
 
         // On veut ajouter les écouteurs d'évènements sur chaque tâche de la liste
         for (const taskElement of taskElementsList) {
-            console.log(taskElement);
+            // console.log(taskElement);
             task.bindSingleTaskEvents(taskElement);
         }
     },
