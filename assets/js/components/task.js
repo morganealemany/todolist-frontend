@@ -34,6 +34,15 @@ const task = {
 
         // On ajoute l'écoute de la saisie d'une touche du clavier
         taskTitleFieldElement.addEventListener('keydown', task.handleValideNewTaskTitleOnEnterKey);
+
+        // ----------------------------------------------------------------
+        // Ecoute de l'évènement permettant de terminer une tâche
+        // ----------------------------------------------------------------
+        // On récupère l'élément du DOM correspondant au titre de la tâche
+        const taskButtonValidateElement = taskElement.querySelector('.task__button--validate');
+        // Dès qu'on clique sur le titre de la tâche, on passe en mode édition
+        taskButtonValidateElement.addEventListener('click', task.handleCompleteTask);
+        
     },
 
     /**
@@ -108,4 +117,13 @@ const task = {
             task.handleValidateNewTaskTitle(evt);
         }
     },
+
+    /**
+     * Méthode gérant la complétion d'un tâche lors de l'événement click sur le bouton
+     * 
+     * @param {Event} evt 
+     */
+    handleCompleteTask: function(evt) {
+        console.log('Clic sur le bouton valider la tâche');
+    }
 };
