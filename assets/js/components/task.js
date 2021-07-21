@@ -124,6 +124,17 @@ const task = {
      * @param {Event} evt 
      */
     handleCompleteTask: function(evt) {
-        console.log('Clic sur le bouton valider la tâche');
-    }
+        
+        // On récupére l'élement sur lequel l'événement viens d'avoir lieu
+        let buttonElement = evt.currentTarget;
+        
+        // On récupére l'élément parent ayant la classe .task
+        const taskElement = buttonElement.closest('.task');
+
+        // On supprime le modifier task--todo
+        taskElement.classList.remove('task--todo');
+        
+        // Et on ajoute le modifier task--complete
+        taskElement.classList.add('task--complete');
+    },
 };
