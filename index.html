@@ -1,256 +1,315 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="../S07-todolist-frontend-morganealemany/assets/css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
-    <title>Document</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TodoList</title>
+  <link rel="stylesheet" href="assets/css/font-awesome.css" />
+  <!-- L'intégration repose en partie sur le framework CSS Bulma :
+    - Bulma propose uniquement des styles CSS
+    - Bulma ne gère pas les interactions Javascript contrairement à Bootstrap
+    - Si on veut gérer des interactions, il faudra donc les écrire nous même en Javascript
+    - Documentation : https://bulma.io/documentation/
+  -->
+  <link rel="stylesheet" href="assets/css/bulma.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
 </head>
+
 <body>
-    <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">TODOList</a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link border border-warning rounded active" aria-current="page" href="#">Toutes</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link border border-warning rounded" href="#">Complètes</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link border border-warning rounded" href="#">Incomplètes</a>
-              </li>
-              <li class="ms-3 me-3 nav-item">
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Toutes les catégories</option>
-                    <option value="1">Courses</option>
-                    <option value="2">O'clock</option>
-                    <option value="3">Projet Professionnel</option>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <a href=".">
+          <h1 class="logo__title title is-3">TodoList</h1>
+        </a>
+      </div>
+      <div class="filters">
+        <div class="filters__task filters__task--completion buttons are-small has-addons">
+          <button class="filters__choice button is-info is-selected">Toutes</button>
+          <button class="filters__choice button">Complètes</button>
+          <button class="filters__choice button">Incomplètes</button>
+        </div>
+        <div class="filters__task filters__task--category select is-small">
+          <select class="filters__choice">
+            <option>Toutes les catégories</option>
+            <option>Courses</option>
+            <option>O'Clock</option>
+            <option>Projet Professionnel</option>
+          </select>
+        </div>
+        <div class="filters__task filters__task--archived">
+          <a class="filters__choice" href="#">Voir les archives</a>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div class="task task--add">
+        <form method="POST">
+          <div class="task__content">
+            <div class="task__title">
+              <p class="task__title-label"></p>
+              <input class="task__title-field input" type="text" placeholder="Titre de la tâche" name="title" />
+            </div>
+            <div class="task__category">
+              <div class="select is-small">
+                <select>
+                  <option>Choisir une catégorie</option>
+                  <option>Courses</option>
+                  <option>O'Clock</option>
+                  <option>Projet Professionnel</option>
                 </select>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link " href="#" tabindex="-1" aria-disabled="true"><u>Voir les archives</u></a>
-              </li>
-            </ul>
+              </div>
+            </div>
+            <div class="task__buttons">
+              <button class="task__button task__button--add button is-info">
+                <span class="icon is-small">
+                  <i class="fa fa-plus"></i>
+                </span>
+                <span>Ajouter</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="tasks">
+        <div class="task task--todo" data-category="Courses">
+          <div class="task__content">
+            <div class="task__title">
+              <p class="task__title-label">Acheter du pain</p>
+              <input class="task__title-field input" type="text" value="Acheter du pain" placeholder="Titre de la tâche"
+                name="title" />
+            </div>
+            <div class="task__category">
+              <p>Courses</p>
+            </div>
+            <div class="task__buttons">
+              <button class="task__button task__button--incomplete button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-step-backward"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--desarchive button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-undo"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--validate button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-check-square-o"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--modify button is-warning is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-pencil-square-o"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--archive button is-danger is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-archive"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--delete button is-danger is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-trash"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar__level" style="width:0%"></div>
           </div>
         </div>
-    </nav>
-
-    <!-- Ajouter une tâche -->
-
-    <div class="container-fluid">
-        <div class="border border-warning p-3 m-3">
-    <form class="row">
-    <div class="d-flex align-items-center mb-1 mt-1 col-lg-6 col-md-12">
-        <label for="task" class="visually-hidden">Tâche</label>
-        <input type="text" class="form-control" id="task" name= "task" placeholder="Nom de la tâche">
-    </div>
-    <div class="d-flex align-items-center mb-1 mt-1 col-lg-4 col-md-8">
-        <label for="category" class="visually-hidden">Catégorie</label>
-        <select class="form-select mt-0" id="category" name= "category">
-            <option selected>Choisir une catégorie</option>
-            <option value="courses">Courses</option>
-            <option value="oclock">O'clock</option>
-            <option value="projet-professionnel">Projet Professionnel</option>
-        </select>
-        </div>
-    <div class="d-flex align-items-center d-flex justify-content-center col-lg-2 col-md-4">
-        <button type="submit" class="d-flex align-items-center btn btn-mustard mb-1 mt-1"> + Ajouter</button>
-    </div>
-    </form>
-    </div>
-    </div>
-
-        <!-- Tâche créée-->
-
-    <div class="container-fluid">
-        <div class="border p-3 mt-3 ms-3 me-3">
-        <div class="row">
-            <div class="col-12 col-md-12 col-lg-8">
-            <p class="mb-0">Acheter du pain</p>
+        <div class="task task--todo" data-category="O'Clock">
+          <div class="task__content">
+            <div class="task__title">
+              <p class="task__title-label">Réviser les objets en PHP</p>
+              <input class="task__title-field input" type="text" value="Réviser les objets en PHP"
+                placeholder="Titre de la tâche" name="title" />
             </div>
-            <div class="d-flex align-items-center d-flex justify-content-end col-6 col-md-10 col-lg-2">
-                <p class="mb-0 category">Courses</p>
+            <div class="task__category">
+              <p>O'Clock</p>
             </div>
-            <div class="d-flex align-items-center d-flex justify-content-end col-6 col-md-2 col-lg-2">
-            <button class="border bg-warning text-dark rounded">
-                <a href="" class="border border-warning"><i class="bi bi-check2-square"></i>
-                </a>
-            </button>
-            <button class="border bg-warning text-dark rounded ms-2">
-                <a href="" class="border border-warning"><i class="bi bi-pencil-square"></i>
-                </a>
-            </button>
-            <button class="border bg-warning text-dark rounded ms-2">
-                <a href="" class="border border-warning"><i class="bi bi-archive"></i>
-                </a>
-            </button>
+            <div class="task__buttons">
+              <button class="task__button task__button--incomplete button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-step-backward"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--desarchive button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-undo"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--validate button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-check-square-o"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--modify button is-warning is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-pencil-square-o"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--archive button is-danger is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-archive"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--delete button is-danger is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-trash"></i>
+                </span>
+              </button>
             </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar__level" style="width:70%"></div>
+          </div>
         </div>
-        </div>
-
-        <!-- Barre de progression de tâche-->   
-
-        <div class="ms-3 me-3 bar">
-            <div class="max_bar">
-                <div class="progress_bar" style = "width : 1%"></div>   
+        <div class="task task--complete" data-category="O'Clock">
+          <div class="task__content">
+            <div class="task__title">
+              <p class="task__title-label">Revoir les évènements en JS</p>
+              <input class="task__title-field input" type="text" value="Revoir les évènements en JS"
+                placeholder="Titre de la tâche" name="title" />
             </div>
-            
-        </div>
-    </div>
-    
-
-    <!-- Tâche en cours de complétion-->
-
-    <div class="container-fluid">
-        <div class="border p-3 mt-3 ms-3 me-3">
-        <div class="row">
-            <div class="col-12 col-md-12 col-lg-8">
-            <p class="mb-0">Réviser les objets en PHP</p>
+            <div class="task__category">
+              <p>O'Clock</p>
             </div>
-            <div class="d-flex align-items-center d-flex justify-content-end col-6 col-md-10 col-lg-2">
-                <p class="mb-0 category">O'clock</p>
-                </div>
-            <div class="d-flex align-items-center d-flex justify-content-end col-6 col-md-2 col-lg-2">
-            <button class="border bg-warning text-dark rounded">
-                <a href="" class="border border-warning"><i class="bi bi-check2-square"></i>
-                </a>
-            </button>
-            <button class="border bg-warning text-dark rounded ms-2">
-                <a href="" class="border border-warning"><i class="bi bi-pencil-square"></i>
-                </a>
-            </button>
-            <button class="border bg-warning text-dark rounded ms-2">
-                <a href="" class="border border-warning"><i class="bi bi-archive"></i>
-                </a>
-            </button>
+            <div class="task__buttons">
+              <button class="task__button task__button--incomplete button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-step-backward"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--desarchive button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-undo"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--validate button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-check-square-o"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--modify button is-warning is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-pencil-square-o"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--archive button is-danger is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-archive"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--delete button is-danger is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-trash"></i>
+                </span>
+              </button>
             </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar__level" style="width:100%"></div>
+          </div>
         </div>
-        </div>
-
-        <!-- Barre de progression de tâche-->
-
-        <div class="ms-3 me-3 bar">
-            <div class="max_bar">
-                <div class="progress_bar" style = "width : 80%"></div>   
+        <div class="task task--edit" data-category="O'Clock">
+          <div class="task__content">
+            <div class="task__title">
+              <p class="task__title-label">Apprendre à apprend</p>
+              <input class="task__title-field input" type="text" value="Apprendre à apprend" name="title" />
             </div>
+            <div class="task__category">
+              <p>O'Clock</p>
             </div>
-    </div>
-
-    <!-- Tâche terminée -->
-
-    <div class="container-fluid">
-        <div class="border p-3 mt-3 ms-3 me-3">
-        <div class="row">
-            <div class="col-12 col-md-12 col-lg-8">
-            <p class="mb-0"><del>Revoir les événements en JS</del></p>
+            <div class="task__buttons">
+              <button class="task__button task__button--incomplete button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-step-backward"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--desarchive button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-undo"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--validate button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-check-square-o"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--modify button is-warning is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-pencil-square-o"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--archive button is-danger is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-archive"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--delete button is-danger is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-trash"></i>
+                </span>
+              </button>
             </div>
-            <div class="d-flex align-items-center d-flex justify-content-end col-6 col-md-10 col-lg-2">
-                <p class="mb-0 category">O'clock</p>
-                </div>
-            <div class="d-flex align-items-center d-flex justify-content-end col-6 col-md-2 col-lg-2">
-            <button class="border bg-warning text-dark rounded">
-                <a href="" class="border border-warning"><i class="bi bi-skip-backward"></i>
-                </a>
-            </button>
-            <button class="border bg-warning text-dark rounded ms-2">
-                <a href="" class="border border-warning"><i class="bi bi-pencil-square"></i>
-                </a>
-            </button>
-            <button class="border bg-warning text-dark rounded ms-2">
-                <a href="" class="border border-warning"><i class="bi bi-archive"></i>
-                </a>
-            </button>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar__level" style="width:30%"></div>
+          </div>
+        </div>
+        <div class="task task--archive" data-category="O'Clock">
+          <div class="task__content">
+            <div class="task__title">
+              <p class="task__title-label">Exemple de tâche archivée</p>
+              <input class="task__title-field input" type="text" value="Exemple de tâche archivée"
+                placeholder="Titre de la tâche" name="title" />
             </div>
-        </div>
-        </div>
-
-            <!-- Barre de progression de tâche-->
-
-            <div class="ms-3 me-3 bar">
-                <div class="max_bar">
-                    <div class="progress_bar" style = "width : 100%"></div>   
-                </div>
-                </div>
-        </div>
-
-    <!-- Tâche en édition  -->
-
-    <div class="container-fluid">
-        <div class="border p-3 mt-3 ms-3 me-3">
-        <div class="row">
-            <div class="col-12 col-md-12 col-lg-8">
-            <input type="text" class="mb-0" value="Apprendre à apprend">
+            <div class="task__category">
+              <p>O'Clock</p>
             </div>
-            <div class="d-flex align-items-center d-flex justify-content-end col-6 col-md-10 col-lg-2">
-                <p class="visually-hidden mb-0 category">O'clock</p>
-                </div>
-            <div class="d-flex align-items-center d-flex justify-content-end col-6 col-md-2 col-lg-2">
-            <button class="border bg-warning text-dark rounded">
-                <a href="" class="border border-warning"><i class="bi bi-check2-square"></i>
-                </a>
-            </button>
-            <button class="border bg-warning text-dark rounded ms-2">
-                <a href="" class="border border-warning"><i class="bi bi-pencil-square"></i>
-                </a>
-            </button>
-            <button class="border bg-warning text-dark rounded ms-2">
-                <a href="" class="border border-warning"><i class="bi bi-archive"></i>
-                </a>
-            </button>
+            <div class="task__buttons">
+              <button class="task__button task__button--incomplete button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-step-backward"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--desarchive button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-undo"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--validate button is-success is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-check-square-o"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--modify button is-warning is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-pencil-square-o"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--archive button is-danger is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-archive"></i>
+                </span>
+              </button>
+              <button class="task__button task__button--delete button is-danger is-small">
+                <span class="icon is-small">
+                  <i class="fa fa-trash"></i>
+                </span>
+              </button>
             </div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar__level" style="width:30%"></div>
+          </div>
         </div>
-        </div>
-
-            <!-- Barre de progression de tâche-->
-
-            <div class="ms-3 me-3 bar">
-                <div class="max_bar">
-                    <div class="progress_bar" style = "width : 40%"></div>   
-                </div>
-                </div>
-        </div>
-
-     <!-- Tâche archivée  -->
-
-     <div class="container-fluid">
-        <div class="bg-light p-3 mt-3 ms-3 me-3">
-        <div class="row">
-            <div class="col-12 col-md-12 col-lg-8">
-                <p class="font_archive mb-0">Exemple de tâche archivée</p>            </div>
-            <div class="d-flex align-items-center d-flex justify-content-end col-6 col-md-10 col-lg-2">
-                <p class="visually-hidden mb-0 category">O'clock</p>
-                </div>
-            <div class="d-flex align-items-center d-flex justify-content-end col-6 col-md-2 col-lg-2">
-            <button class="border bg-warning text-dark rounded ms-2">
-                <a href="" class="border border-warning"><i class="bi bi-box-arrow-left"></i>
-                </a>
-            </button>
-            <button class="border bg-warning text-dark rounded ms-2">
-                <a href="" class="border border-warning"><i class="bi bi-trash"></i>
-                </a>
-            </button>
-            </div>
-        </div>
-        </div>
-
-            <!-- Barre de progression de tâche-->
-
-            <div class="ms-3 me-3 bar">
-                <div class="max_bar">
-                    <div class="progress_bar progress_bar_archive" style = "width : 80%"></div>   
-                </div>
-                </div>
-        </div>
-
+      </div>
+    </main>
+  </div>
 </body>
+
 </html>
