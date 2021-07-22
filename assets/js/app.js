@@ -5,12 +5,11 @@ const app = {
 
     /**
      * La méthode init contient le code que l'on veut exécuter au lancement
-     * de l'application
+     * de l'applicatoin
      */
     init: function() {
         tasksList.init();
         newTaskForm.init();
-        tasksFilter.init();
     }
 };
 

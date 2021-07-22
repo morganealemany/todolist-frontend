@@ -26,8 +26,27 @@
 
         // On veut ajouter les écouteurs d'évènements sur chaque tâche de la liste
         for (const taskElement of taskElementsList) {
-            // console.log(taskElement);
+            console.log(taskElement);
             task.bindSingleTaskEvents(taskElement);
         }
+    },
+
+    // ####################################################################
+    //                               DOM
+    // ####################################################################
+
+    /**
+     * Ajoute un élément task dans la liste des tâches
+     * 
+     * @param {HTMLElement} taskElement L'élément tâche à ajouter
+     */
+    insertTaskIntoTasksList: function(taskElement) {
+        
+        // Récupération de l'élément contenant la liste des tâches
+        const tasksListElement = document.querySelector('.tasks');
+
+        // Insertion de la tâche dans la liste
+        // https://developer.mozilla.org/fr/docs/Web/API/ParentNode/prepend
+        tasksListElement.prepend(taskElement);
     },
 };
