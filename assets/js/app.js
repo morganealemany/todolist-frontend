@@ -10,6 +10,7 @@ const app = {
     init: function() {
         tasksList.init();
         newTaskForm.init();
+        categoriesList.init();
     }
 };
 
