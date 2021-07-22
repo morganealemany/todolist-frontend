@@ -8,6 +8,7 @@
      */
     init: function() {
         tasksList.bindAllTasksEvents();
+        tasksList.loadTasksFromAPI();
     },
 
     // ####################################################################
@@ -29,6 +30,47 @@
             // console.log(taskElement);
             task.bindSingleTaskEvents(taskElement);
         }
+    },
+
+     // ####################################################################
+    //                               API
+    // ####################################################################
+    /**
+     * Méthode gérant le téléchargement de la liste des catégories depuis l'API
+     */
+     loadTasksFromAPI: function() {
+
+        // On prépare la configuration de la requête HTTP
+        let config = {
+        method: 'GET',
+        mode: 'cors',
+        cache: 'no-cache'
+        };
+
+        // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
+        fetch('https://benoclock.github.io/S07-todolist/tasks.json', config)
+        // Ensuite, lorsqu'on reçoit la réponse au format JSON
+        .then(function(response) {
+            // On convertit cette réponse en un objet JS et on le retourne
+            // console.log(response, response.json);
+            return response.json();
+        })
+        // Ce résultat au format JS est récupéré en argument ici-même
+        .then(function(data) {
+            // console.log(data);
+            // On dispose désormais d'un tableau JS exploitable dans la variable data
+            // On parcourt les données pour générer un élément .task
+            for (const currentTask of data) {
+                // console.log(task.category.name);
+                // On créé un nouveau template pour chaque tâche
+                const newTaskElement = task.createTaskElement(currentTask.title, currentTask.category.name); 
+
+                // Puis on affiche toutes les nouvelles tâches
+                tasksList.insertTaskIntoTasksList(newTaskElement);
+            }
+            
+        });
+
     },
 
     // ####################################################################

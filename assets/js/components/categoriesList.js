@@ -19,8 +19,6 @@
      */
     loadCategoriesFromAPI: function() {
 
-        let myList = document.querySelector('ul');
-
         // On prépare la configuration de la requête HTTP
         let config = {
         method: 'GET',
