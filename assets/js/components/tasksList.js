@@ -7,8 +7,50 @@
      * Méthode initilisant notre composant gérant la liste des tâches
      */
     init: function() {
-        tasksList.bindAllTasksEvents();
+        // Plus besoin d'ajouter les écouteurs d'évènement à ce stade
+        // car ils seront ajoutés lors de la création des tâches
+        // dans createTaskElement
+        // tasksList.bindAllTasksEvents();
         tasksList.loadTasksFromAPI();
+    },
+
+    // ###############################################################
+    //                            AJAX/API
+    // ###############################################################
+
+    /**
+     * Méthode effectuant le chargement de la liste des tâches depuis l'API
+     */
+     loadTasksFromAPI: function() {
+        
+        // On prépare la configuration de la requête HTTP
+        const config = {
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache'
+        };
+  
+        // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
+        fetch(app.apiBaseURL + '/tasks.json', config)
+        // Ensuite, lorsqu'on reçoit la réponse au format JSON
+        .then(function(response) {
+            // On convertit cette réponse en un objet JS et on le retourne
+            return response.json();
+        })
+        // Ce résultat au format JS est récupéré en argument ici-même
+        .then(function(tasksListFromAPI) {
+            // On dispose désormais d'un tableau JS exploitable dans la variable tasksListFromAPI
+            // console.log(tasksListFromAPI);
+
+            // Pour chaque tâche de la liste retournée
+            for (const singleTask of tasksListFromAPI) {
+                // console.log(singleTask);
+                // on crée un nouvel élément "task"
+                const newTaskElement = task.createTaskElement(singleTask.title, singleTask.category.name);
+                // et on l'insère dans le DOM
+                tasksList.insertTaskIntoTasksList(newTaskElement);
+            }
+        });
     },
 
     // ####################################################################
@@ -27,50 +69,9 @@
 
         // On veut ajouter les écouteurs d'évènements sur chaque tâche de la liste
         for (const taskElement of taskElementsList) {
-            // console.log(taskElement);
+            console.log(taskElement);
             task.bindSingleTaskEvents(taskElement);
         }
-    },
-
-     // ####################################################################
-    //                               API
-    // ####################################################################
-    /**
-     * Méthode gérant le téléchargement de la liste des catégories depuis l'API
-     */
-     loadTasksFromAPI: function() {
-
-        // On prépare la configuration de la requête HTTP
-        let config = {
-        method: 'GET',
-        mode: 'cors',
-        cache: 'no-cache'
-        };
-
-        // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
-        fetch(app.apiBaseUrl + '/tasks.json', config)
-        // Ensuite, lorsqu'on reçoit la réponse au format JSON
-        .then(function(response) {
-            // On convertit cette réponse en un objet JS et on le retourne
-            // console.log(response, response.json);
-            return response.json();
-        })
-        // Ce résultat au format JS est récupéré en argument ici-même
-        .then(function(data) {
-            // console.log(data);
-            // On dispose désormais d'un tableau JS exploitable dans la variable data
-            // On parcourt les données pour générer un élément .task
-            for (const currentTask of data) {
-                // console.log(task.category.name);
-                // On créé un nouveau template pour chaque tâche
-                const newTaskElement = task.createTaskElement(currentTask.title, currentTask.category.name); 
-
-                // Puis on affiche toutes les nouvelles tâches
-                tasksList.insertTaskIntoTasksList(newTaskElement);
-            }
-            
-        });
-
     },
 
     // ####################################################################

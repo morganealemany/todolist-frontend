@@ -1,142 +1,119 @@
 /**
- * Composant categoriesList
+ * Composant gérant la liste des catégories
  */
- const categoriesList = {
+const categoriesList = {
 
-
-    /**
-     * Méthode initilisant notre composant gérant la liste des catégories
-     */
     init: function() {
         categoriesList.loadCategoriesFromAPI();
     },
 
-    // ####################################################################
-    //                               AJAX/API
-    // ####################################################################
+    // ###############################################################
+    //                            AJAX/API
+    // ###############################################################
+
     /**
-     * Méthode gérant le téléchargement de la liste des catégories depuis l'API
+     * Méthode effectuant le chargement de la liste des catégories depuis l'API
      */
     loadCategoriesFromAPI: function() {
-
+        
         // On prépare la configuration de la requête HTTP
         const config = {
-        method: 'GET',
-        mode: 'cors',
-        cache: 'no-cache'
+            method: 'GET',
+            mode: 'cors',
+            cache: 'no-cache'
         };
-
+  
         // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
-        fetch(app.apiBaseUrl + '/categories.json', config)
+        fetch(app.apiBaseURL + '/categories.json', config)
         // Ensuite, lorsqu'on reçoit la réponse au format JSON
         .then(function(response) {
             // On convertit cette réponse en un objet JS et on le retourne
-            // console.log(response, response.json);
             return response.json();
         })
         // Ce résultat au format JS est récupéré en argument ici-même
-        .then(function(data) {
-            // console.log(data);
-            // On dispose désormais d'un tableau JS exploitable dans la variable data
-            // La suite dépend de l'utilisation qu'on veut faire de ces données
-            categoriesList.createSelectCategoriesForHeaderElement(data);
-            categoriesList.createSelectCategoriesForAddTaskFormElement(data);
-            
-            }
-        );
+        .then(function(categoriesListFromAPI) {
+            // On dispose désormais d'un tableau JS exploitable dans la variable categoriesListFromAPI
+            // console.log(categoriesListFromAPI);
 
+            // Création du select pour les filtres des tâches
+            const selectElementForTaskFilters = 
+                categoriesList.createSelectElement(
+                    categoriesListFromAPI,
+                    'Toutes les catégories',
+                    'filters__choice'
+                );
+            // suivi de son ajout dans le DOM
+            document.querySelector('.filters__task--category').append(selectElementForTaskFilters);
+
+            // Création du select pour le formulaire d'ajout d'une tâche
+            const selectElementForNewTaskForm =
+                categoriesList.createSelectElement(
+                    categoriesListFromAPI,
+                    'Choisir une catégorie'
+                );
+            // suivi de son ajout dans le DOM
+            document.querySelector('.task--add .task__category .select').append(selectElementForNewTaskForm);
+
+            // Précisions sur l'utilisation de append/appendChild
+            // si on créait un élément et qu'on souhaitait le placer à
+            // 2 endroits dans le document :
+            // attention, car l'élément serait déplacé sur premier endroit
+            // vers le deuxième endroit
+            // car si l'élément a déjà un parent (ce qui sera le cas après le 
+            // premier déplacement), l'élément sera retiré de son premier parent
+            // avant d'être déplacer vers le deuxième parent
+            // => solution pour éviter ça : faire un clone de l'élément que l'on
+            // souhaite mettre à 2 endroits dans la page
+
+        });
     },
 
+    // ###############################################################
+    //                              DOM
+    // ###############################################################
+
     /**
-     * Méthode gérant la création d'un élément select pour les catégories dans le header
+     * Méthode permettant de générer une liste déroulante des catégories
      * 
-     * @param {array} dataCategoryList
+     * @param {Array} categoriesList Tableau contenant la liste des catégories
+     * @param {String} defaultLabel Le libellé de la première valeur de la liste
+     * @param {String} clasName Le nom de la classe à rajouter sur le <select>
+     * 
+     * @returns {HTMLElement} Un élément <select> avec les <option> remplies
      */
-    createSelectCategoriesForHeaderElement: function(dataCategoryList) {
+    createSelectElement: function(categoriesList, defaultLabel, className = '') {
+        // Création de l'élément <select>
+        const selectElement = document.createElement('select');
 
-        // On crée un nouvel élément HTML 
-        const newSelectCategoriesElement = document.createElement("select");
-
-        // On lui ajoute un attribut class
-        newSelectCategoriesElement.setAttribute("class", "filters__choice");
-
-        // On parcourt les données de l'API
-        for (const category of dataCategoryList) {
-
-            // On crée l'élément html <option>
-            const newOptionElement = document.createElement("option");
-
-            // Et on lui ajoute le nom de la catégorie
-            newOptionElement.textContent = category.name;
-
-            // Enfin on ajoute chaque option comme enfant du select créé précedemment: newSelectCategoriesElement
-            newSelectCategoriesElement.append(newOptionElement);
-
+        // Ajout éventuel d'un attribut class si className est fourni
+        if (className !== '') { // Si className est différent de chaîne vide
+            selectElement.classList.add(className);
         }
-        // console.log(newSelectCategoriesElement);
-        categoriesList.addNewSelectCategoriesElementInHeader(newSelectCategoriesElement);
-    },
 
-    /**
-     * Méthode gérant la création d'un élément select pour les catégories dans le formulaire d'ajout d'une tâche
-     * 
-     * @param {array} dataCategoryList 
-     */
-    createSelectCategoriesForAddTaskFormElement: function(dataCategoryList) {
+        // Création de la première <option> en guise de valeur par défaut
+        const defaultOptionElement = document.createElement('option');
+        defaultOptionElement.textContent = defaultLabel;
+        // Ajout de l'<option> dans la liste
+        // selectElement.appendChild(defaultOptionElement);
+        // on peut aussi insérer l'option avec append qui permet
+        // un peu plus de choses même si dans notre cas, ça change rien
+        // voir différences entre appendChild et append : https://developer.mozilla.org/en-US/docs/Web/API/Element/append
+        selectElement.append(defaultOptionElement);
 
-        // On crée deux nouveaux éléments HTML 
-        newDivCategoriesElement = document.createElement("div");
-
-        newSelectCategoriesElement = document.createElement("select");
-
-        // On recrée la structure HTML <div> <select>
-        newDivCategoriesElement.append(newSelectCategoriesElement);
-
-        // On lui ajoute un attribut class
-        newDivCategoriesElement.setAttribute("class", "select");
-
-        newDivCategoriesElement.classList.add("is-small");
-
-        // On parcourt les données de l'API
-        for (const category of dataCategoryList) {
-
-            // On crée l'élément html <option>
-            const newOptionElement = document.createElement("option");
-
-            // Et on lui ajoute le nom de la catégorie
-            newOptionElement.textContent = category.name;
-
-            // Enfin on ajoute chaque option comme enfant du select créé précedemment: newSelectCategoriesElement
-            newSelectCategoriesElement.append(newOptionElement);
-
+        // On parcourt la liste des catégories pour créer
+        // une <option> par nom de catégorie
+        for (const category of categoriesList) {
+            console.log(category);
+            // Création de l'élément <option>
+            const optionElement = document.createElement('option');
+            // On lui ajoute son contenu
+            optionElement.textContent = category.name;
+            // On insère l'<option> dans le <select>
+            selectElement.append(optionElement);
         }
-        // On appelle la méthode permettant d'ajouter l'élément créee dans le formulaire d'ajout de tâche
-        categoriesList.addNewSelectCategoriesElementInAddTaskForm(newDivCategoriesElement);
-    },
 
-      // ####################################################################
-    //                               DOM
-    // ####################################################################
-
-    /**
-     * Méthode gérant l'ajout du menu déroulant select categories dans le DOM
-     * 
-     * @param {HTMLElement} newSelectCategoriesElement 
-     */
-    addNewSelectCategoriesElementInHeader: function(newSelectCategoriesElement) {
-
-        // On cible l'élément parent du menu déroulant dans le header et on lui ajoute comme enfant le menu déroulant généré grâce à l'API : newSelectCategoriesElement
-        document.querySelector('.filters .filters__task--category').append(newSelectCategoriesElement);
+        // On retourne le <select> qui vient d'être créé
+        return selectElement;
 
     },
-
-    /**
-     * Méthode gérant l'ajout du menu déroulant div > select categories dans le formulaire d'ajout de tâche
-     * 
-     * @param {HTMLElement} newDivCategoriesElement 
-     */
-    addNewSelectCategoriesElementInAddTaskForm: function(newDivCategoriesElement) {
-    // On cible l'élément parent du menu déroulant dans le header et on lui ajoute comme enfant le menu déroulant généré grâce à l'API : newDivCategoriesElement
-    document.querySelector('.task form .task__category').append(newDivCategoriesElement);
-    },
-}
+};
