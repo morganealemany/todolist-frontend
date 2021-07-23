@@ -48,7 +48,7 @@
         };
 
         // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
-        fetch('https://benoclock.github.io/S07-todolist/tasks.json', config)
+        fetch(app.apiBaseUrl + '/tasks.json', config)
         // Ensuite, lorsqu'on reçoit la réponse au format JSON
         .then(function(response) {
             // On convertit cette réponse en un objet JS et on le retourne

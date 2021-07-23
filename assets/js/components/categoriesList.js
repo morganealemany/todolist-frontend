@@ -3,6 +3,7 @@
  */
  const categoriesList = {
 
+
     /**
      * Méthode initilisant notre composant gérant la liste des catégories
      */
@@ -10,9 +11,8 @@
         categoriesList.loadCategoriesFromAPI();
     },
 
-
-      // ####################################################################
-    //                               API
+    // ####################################################################
+    //                               AJAX/API
     // ####################################################################
     /**
      * Méthode gérant le téléchargement de la liste des catégories depuis l'API
@@ -20,14 +20,14 @@
     loadCategoriesFromAPI: function() {
 
         // On prépare la configuration de la requête HTTP
-        let config = {
+        const config = {
         method: 'GET',
         mode: 'cors',
         cache: 'no-cache'
         };
 
         // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
-        fetch('https://benoclock.github.io/S07-todolist/categories.json', config)
+        fetch(app.apiBaseUrl + '/categories.json', config)
         // Ensuite, lorsqu'on reçoit la réponse au format JSON
         .then(function(response) {
             // On convertit cette réponse en un objet JS et on le retourne
@@ -55,7 +55,7 @@
     createSelectCategoriesForHeaderElement: function(dataCategoryList) {
 
         // On crée un nouvel élément HTML 
-        newSelectCategoriesElement = document.createElement("select");
+        const newSelectCategoriesElement = document.createElement("select");
 
         // On lui ajoute un attribut class
         newSelectCategoriesElement.setAttribute("class", "filters__choice");
