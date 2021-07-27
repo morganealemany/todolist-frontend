@@ -3,7 +3,7 @@
  */
 const app = {
 
-    apiBaseURL : 'https://benoclock.github.io/S07-todolist',
+    apiBaseURL : 'http://localhost:8080',
 
     /**
      * La méthode init contient le code que l'on veut exécuter au lancement

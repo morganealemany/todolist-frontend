@@ -31,7 +31,7 @@
         };
   
         // On déclenche la requête HTTP (via le moteur sous-jacent Ajax)
-        fetch(app.apiBaseURL + '/tasks.json', config)
+        fetch(app.apiBaseURL + '/tasks', config)
         // Ensuite, lorsqu'on reçoit la réponse au format JSON
         .then(function(response) {
             // On convertit cette réponse en un objet JS et on le retourne
@@ -46,7 +46,7 @@
             for (const singleTask of tasksListFromAPI) {
                 // console.log(singleTask);
                 // on crée un nouvel élément "task"
-                const newTaskElement = task.createTaskElement(singleTask.title, singleTask.category.name);
+                const newTaskElement = task.createTaskElement(singleTask.title, singleTask.category.name, singleTask.id);
                 // et on l'insère dans le DOM
                 tasksList.insertTaskIntoTasksList(newTaskElement);
             }

@@ -163,10 +163,11 @@ const task = {
      * 
      * @param {String} newTaskTitle 
      * @param {String} newTaskCategoryName 
+     * @param {number} newTaskId
      * 
      * @return {HTMLElement}
      */
-    createTaskElement: function(newTaskTitle, newTaskCategoryName) {
+    createTaskElement: function(newTaskTitle, newTaskCategoryName, newTaskId) {
 
         // --------------------------------------------------
         // Création du clone
@@ -196,6 +197,8 @@ const task = {
         // Nom de la catégorie
         task.updateTaskCategoryName(newTaskElement, newTaskCategoryName);
 
+
+        task.updateTaskId(newTaskElement, newTaskId);
         // ---------------------------------------------------- 
         // On n'oublie pas d'ajouter les écouteurs d'évènement
         // ----------------------------------------------------
@@ -239,4 +242,17 @@ const task = {
         // Mise à jour de sa valeur
         taskCategoryNameElement.textContent = taskCategoryName;
     },
+
+    /**
+     * Méthode gérant la mise à jour de l'id d'une tâche
+     * 
+     * @param {HTMLElement} taskElement 
+     * @param {number} taskId 
+     */
+    updateTaskId: function(taskElement, taskId)
+    {
+        taskElement.dataset.id = taskId;
+
+        
+    }
 };
