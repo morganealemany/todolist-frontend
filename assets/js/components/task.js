@@ -129,11 +129,11 @@ const task = {
      * lors du clic sur le bouton 'complete' de la tâche
      */
     handleCompleteTask: function(evt) {
-        console.log('Au clic, je passe dans handleCompleteTask');
+        console.log();
 
         // Récupération du bouton à l'origine de l'évènement
         const taskCompleteButtonElement = evt.currentTarget;
-        // Recherce de la tâche à laquelle appartient ce bouton
+        // Recherche de la tâche à laquelle appartient ce bouton
         const taskElement = taskCompleteButtonElement.closest('.task');
         // Modification de la complétion de la tâche dans le DOM
         task.markTaskAsComplete(taskElement);
@@ -156,6 +156,50 @@ const task = {
         // On peut aussi le faire en 1 seule ligne avec replace
         // Doc : https://developer.mozilla.org/fr/docs/Web/API/Element/classList
         taskElement.classList.replace('task--todo','task--complete');
+
+        // On récupére l'id de la tâche grâce au dataset
+        const taskId = taskElement.dataset.id;
+        console.log(taskId);
+
+        // On stocke les données à transférer
+        const data = {
+            completion: 100
+        };
+        
+        // On prépare les entêtes HTTP (headers) de la requête
+        // afin de spécifier que les données sont en JSON
+        const httpHeaders = new Headers();
+        httpHeaders.append("Content-Type", "application/json");
+        
+
+        // On prépare la configuration de la requête HTTP
+        const config = {
+            method: 'PATCH',
+            mode: 'cors',
+            cache: 'no-cache',
+            // On ajoute les headers dans les options 
+            headers: httpHeaders,
+            // On ajoute les données, encodées au format JSON, dans le corps de la requête
+            body: JSON.stringify(data)
+        };
+  
+        // On déclenche la requête HTTP avec fetch
+        fetch(app.apiBaseURL + '/tasks/' + taskId , config)
+        // Ensuite, lorsqu'on reçoit la réponse au format JSON
+        .then(
+            function(response) {
+                console.log(response);
+                // Si HTTP status code à 204 => OK
+                if (response.status == 204) {
+                    alert('ajout effectué');
+                    
+                    // TODO selon ce qu'on veut faire une fois la réponse récupérée
+                }
+                else {
+                    alert('L\'ajout a échoué');
+                }
+            }
+        )
     },
 
     /**

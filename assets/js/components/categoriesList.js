@@ -103,7 +103,7 @@ const categoriesList = {
         // On parcourt la liste des catégories pour créer
         // une <option> par nom de catégorie
         for (const category of categoriesList) {
-            console.log(category);
+            // console.log(category);
             // Création de l'élément <option>
             const optionElement = document.createElement('option');
             // On lui ajoute son contenu
