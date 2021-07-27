@@ -108,6 +108,8 @@ const categoriesList = {
             const optionElement = document.createElement('option');
             // On lui ajoute son contenu
             optionElement.textContent = category.name;
+            // Et un dataset data-id
+            optionElement.dataset.id = category.id;
             // On insère l'<option> dans le <select>
             selectElement.append(optionElement);
         }

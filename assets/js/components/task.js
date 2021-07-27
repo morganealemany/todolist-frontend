@@ -192,7 +192,7 @@ const task = {
                 // Si HTTP status code à 204 => OK
                 if (response.status == 204) {
                     alert('ajout effectué');
-                    
+
                     // TODO selon ce qu'on veut faire une fois la réponse récupérée
                 }
                 else {
@@ -248,6 +248,7 @@ const task = {
         // On n'oublie pas d'ajouter les écouteurs d'évènement
         // ----------------------------------------------------
         task.bindSingleTaskEvents(newTaskElement);
+
 
         // on retourne l'élément nouvelle tâche
         // /!\ A ce stade, l'élément n'a toujours pas été ajouté dans le DOM /!\

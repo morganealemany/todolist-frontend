@@ -61,6 +61,8 @@ const newTaskForm = {
         // Récupération du nom de la catégorie
         const categoryElement = newTaskFormElement.querySelector('.task__category select');
         const newTaskCategoryName = categoryElement.value;
+        const newCategoryId = categoryElement.selectedIndex;
+        console.log(newCategoryId);
 
         // Création de la nouvelle tâche
         const newTaskElement = task.createTaskElement(newTaskTitle, newTaskCategoryName);
