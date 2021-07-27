@@ -163,7 +163,7 @@ const task = {
      * 
      * @param {String} newTaskTitle 
      * @param {String} newTaskCategoryName 
-     * @param {number} newTaskId
+     * @param {Number} newTaskId
      * 
      * @return {HTMLElement}
      */
@@ -197,8 +197,9 @@ const task = {
         // Nom de la catégorie
         task.updateTaskCategoryName(newTaskElement, newTaskCategoryName);
 
-
+        // ID de la tâche
         task.updateTaskId(newTaskElement, newTaskId);
+
         // ---------------------------------------------------- 
         // On n'oublie pas d'ajouter les écouteurs d'évènement
         // ----------------------------------------------------
@@ -247,12 +248,10 @@ const task = {
      * Méthode gérant la mise à jour de l'id d'une tâche
      * 
      * @param {HTMLElement} taskElement 
-     * @param {number} taskId 
+     * @param {Number} taskId 
      */
-    updateTaskId: function(taskElement, taskId)
-    {
+    updateTaskId: function(taskElement, taskId) {
+        // Mise à jour de l'attribut data-id
         taskElement.dataset.id = taskId;
-
-        
     }
 };
