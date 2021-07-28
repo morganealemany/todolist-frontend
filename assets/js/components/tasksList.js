@@ -48,13 +48,16 @@
                 // console.log(singleTask);
                 // on crée un nouvel élément "task"
                 const newTaskElement = task.createTaskElement(singleTask.title, singleTask.category.name, singleTask.id, singleTask.completion, singleTask.status);
-                console.log(newTaskElement);
-                // On veille à cacher les tâches archivées par défaut
+                // console.log(newTaskElement);
+               
+                // On cache les tâches archivées et on affiche les tâches non-archivées
                 tasksList.hideArchiveTasks(newTaskElement);
+               
                 // et on l'insère dans le DOM
                 tasksList.insertTaskIntoTasksList(newTaskElement);
             }
         });
+
     },
 
     /**
@@ -66,6 +69,33 @@
         // Si la tâche en cours a une classe 'task--archive'
         if (taskElement.classList.contains('task--archive')) {
             // Alors on la cache avec un display: none
+            taskElement.style.display = 'none';
+        } 
+        // Sinon c'est que la tâche en cours n'a pas la classe task--archive
+        else {
+            // On veut qu'elle s'affiche
+            // Si la tache en cours a déjà un style 
+            if (taskElement.hasAttribute('style')) {
+                // on lui retire
+                taskElement.removeAttribute('style');
+            }
+        }
+    },
+
+    /**
+     * Méthode permettant de cacher une tâche si elle est n'est pas archivée
+     * 
+     * @param {HTMLElement} taskElement 
+     */
+     hideNonArchiveTasks: function(taskElement) {
+        // Si la tâche en cours a une classe 'task--archive'
+        if (taskElement.classList.contains('task--archive')) {
+            // Alors on l'affiche en retirant son display: none
+            taskElement.removeAttribute('style');
+        } 
+        // Sinon c'est que la tache en cours n'a pas cette classe, elle est donc active
+        else {
+            // On lui affecte donc un display: none afin qu'elle soit cachée
             taskElement.style.display = 'none';
         }
     },
