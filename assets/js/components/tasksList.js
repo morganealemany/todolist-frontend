@@ -46,7 +46,7 @@
             for (const singleTask of tasksListFromAPI) {
                 // console.log(singleTask);
                 // on crée un nouvel élément "task"
-                const newTaskElement = task.createTaskElement(singleTask.title, singleTask.category.name, singleTask.id);
+                const newTaskElement = task.createTaskElement(singleTask.title, singleTask.category.name, singleTask.id, singleTask.completion);
                 // et on l'insère dans le DOM
                 tasksList.insertTaskIntoTasksList(newTaskElement);
             }

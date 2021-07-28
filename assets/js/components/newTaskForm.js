@@ -60,10 +60,15 @@ const newTaskForm = {
 
         // Récupération du nom de la catégorie
         const categoryElement = newTaskFormElement.querySelector('.task__category select');
-        const newTaskCategoryName = categoryElement.value;
-        const newCategoryId = categoryElement.selectedIndex;
-        console.log(newCategoryId);
-        // TODO lancer la requête HTTP
+
+        const newTaskCategoryId = categoryElement.value;
+        // Maintenant que la liste des ctégories contient la valeur de l'id
+        // pour chaque option
+        // => il faut s'y prendre autrement pour récupérer le nom de la catégorie
+        const newTaskCategoryName = categoryElement.querySelector('option:checked').textContent;
+
+        
+
         // Création de la nouvelle tâche
         const newTaskElement = task.createTaskElement(newTaskTitle, newTaskCategoryName);
 

@@ -205,15 +205,33 @@ const task = {
     },
 
     /**
+     * Méthode permettant de une tâche incomplète visuellement dans la page
+     * 
+     * @param {HTMLElement} taskElement 
+     */
+     markTaskAsUnComplete: function(taskElement) {
+        // On enlève la classe task--todo
+        // taskElement.classList.remove('task--todo');
+        // On ajoute la classe task--complete
+        // taskElement.classList.add('task--complete');
+        // On peut aussi le faire en 1 seule ligne avec replace
+        // Doc : https://developer.mozilla.org/fr/docs/Web/API/Element/classList
+        taskElement.classList.replace('task--complete','task--todo');
+
+        
+    },
+
+    /**
      * Méthode permettant de créer un nouvel élément tâche (sans l'ajouter dans le DOM)
      * 
      * @param {String} newTaskTitle 
      * @param {String} newTaskCategoryName 
      * @param {Number} newTaskId
+     * @param {Number} newTaskCompletion
      * 
      * @return {HTMLElement}
      */
-    createTaskElement: function(newTaskTitle, newTaskCategoryName, newTaskId) {
+    createTaskElement: function(newTaskTitle, newTaskCategoryName, newTaskId, newTaskCompletion) {
 
         // --------------------------------------------------
         // Création du clone
@@ -245,6 +263,9 @@ const task = {
 
         // ID de la tâche
         task.updateTaskId(newTaskElement, newTaskId);
+
+        // Complétion de la tâche
+        task.updateTaskCompletion(newTaskElement, newTaskCompletion);
 
         // ---------------------------------------------------- 
         // On n'oublie pas d'ajouter les écouteurs d'évènement
@@ -300,5 +321,23 @@ const task = {
     updateTaskId: function(taskElement, taskId) {
         // Mise à jour de l'attribut data-id
         taskElement.dataset.id = taskId;
+    },
+
+    /**
+     * Méthode permettant de modifier la complétion d'une tâche
+     * 
+     * @param {HTMLElement} taskElement 
+     * @param {Number} taskCompletion 
+     */
+    updateTaskCompletion: function(taskElement, taskCompletion) {
+        if (newCompletion === 100) {
+            task.markTaskAsComplete(taskElement);
+        } else {
+            task.markTaskAsUnComplete(taskElement);
+        }
+
+        // Bonus mettre à jour la barre de progression
+
+        taskElement.querySelector('progress-bar__level').style.width = newCompletion + '%';
     }
 };
