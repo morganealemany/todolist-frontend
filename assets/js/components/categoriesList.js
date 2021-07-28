@@ -108,7 +108,7 @@ const categoriesList = {
             const optionElement = document.createElement('option');
             // On lui ajoute son contenu
             optionElement.textContent = category.name;
-            // Et une value pour récupérer l'id
+            // On donne un valeur à l'option
             optionElement.value = category.id;
             // On insère l'<option> dans le <select>
             selectElement.append(optionElement);

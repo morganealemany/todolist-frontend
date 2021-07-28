@@ -67,13 +67,64 @@ const newTaskForm = {
         // => il faut s'y prendre autrement pour récupérer le nom de la catégorie
         const newTaskCategoryName = categoryElement.querySelector('option:checked').textContent;
 
+        // ------------------------------------------------------------------
+        // Appel à l'API pour créer la tâche en BDD
+        // ------------------------------------------------------------------
+
+        // On prépare les données de la nouvelle tâche pour les transmettre
+        // ensuite lors de la requête à l'API
+
+        const newTaskData = {
+            title: newTaskTitle,
+            categoryId: newTaskCategoryId
+        };
         
+        // On prépare les entêtes HTTP (headers) de la requête
+        // afin de spécifier que les données sont en JSON
+        const httpHeaders = new Headers();
+        httpHeaders.append("Content-Type", "application/json");
+        
+        // On consomme l'API pour ajouter en DB
+        const fetchOptions = {
+            method: 'POST',
+            mode: 'cors',
+            cache: 'no-cache',
+            // On ajoute les headers dans les options
+            headers: httpHeaders,
+            // On ajoute les données, encodées en JSON, dans le corps de la requête
+            body: JSON.stringify(newTaskData)
+        };
+        
+        // Exécuter la requête HTTP avec FETCH
+        fetch(app.apiBaseURL + '/tasks', fetchOptions)
+        .then(
+            function(response) {
+                // console.log(response);
+                // Si HTTP status code n'est pas 201 => Erreur
+                if (response.status !== 201) {      
+                    alert('Ajout de tâche a échoué');
 
-        // Création de la nouvelle tâche
-        const newTaskElement = task.createTaskElement(newTaskTitle, newTaskCategoryName);
+                    // Ici, idéalement il faudrait déclencher une erreur
+                    // pour stopper la suite le fetch et l'exécution des 
+                    // then suivant
+                } else {
+                    // Si c'est ok
+                    return response.json();
+                }
+            }
+        )
+        // Le résutat JSON a été converti en objet JS
+        .then(function(newTaskObject) {
+            // console.log(newTaskObject);
 
-        // Affichage de la nouvelle tâche
-        tasksList.insertTaskIntoTasksList(newTaskElement);
+            // Création de la nouvelle tâche
+            const newTaskElement = task.createTaskElement(newTaskObject.title, newTaskCategoryName, newTaskObject.id, newTaskObject.completion);
+
+            // Affichage de la nouvelle tâche
+            tasksList.insertTaskIntoTasksList(newTaskElement);
+        });
+
+        
     },
 
 

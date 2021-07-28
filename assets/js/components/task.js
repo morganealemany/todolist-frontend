@@ -49,6 +49,11 @@ const task = {
         // console.log(taskCompleteButtonElement, taskTitleFieldElement);
         // On ajoute l'écoute du clic sur ce bouton
         taskCompleteButtonElement.addEventListener('click', task.handleCompleteTask);
+
+        // ----------------------------------------------------------------
+        // Ecoute de l'évènement permettant de rendre une tâche incomplète
+        // ----------------------------------------------------------------
+        taskElement.querySelector('.task__button--incomplete').addEventListener('click', task.handleUncompleteTask);
     },
 
     /**
@@ -99,12 +104,66 @@ const task = {
         // => possible avec https://developer.mozilla.org/en-US/docs/Web/API/Element/previousElementSibling
         const taskTitleLabelElement = taskTitleFieldElement.previousElementSibling;
 
-        taskTitleLabelElement.textContent = newTaskTitle;
-
-        // Pour quitter le mode édition, il faut enlever la classe 'task--edit'
-        // sur l'élément 'task'
+        // On a également besoin d'accéder à l'élément tâche pour :
+        // - mettre à jour le titre de la la tâche
+        // - quitter le "mode édition"
         const taskElement = taskTitleFieldElement.closest('.task');
-        taskElement.classList.remove('task--edit');
+
+        // On récupère l'id de la tâche nécessaire pour la requête à l'API
+        const taskId = taskElement.dataset.id;
+
+        // -------------------------------------------------------------------
+        // Requête à l'API pour mettre à jour le titre de la tâche en BDD
+        // -------------------------------------------------------------------
+
+        // On stocke les données à transférer
+        const taskData = {
+            title: newTaskTitle
+        };
+
+        // On prépare les entêtes HTTP (headers) de la requête
+        // afin de spécifier que les données sont en JSON
+        const httpHeaders = new Headers();
+        httpHeaders.append("Content-Type", "application/json");
+
+        // On consomme l'API pour ajouter en DB
+        const fetchOptions = {
+            method: 'PATCH',
+            mode: 'cors',
+            cache: 'no-cache',
+            // On ajoute les headers dans les options
+            headers: httpHeaders,
+            // On ajoute les données, encodées en JSON, dans le corps de la requête
+            body: JSON.stringify(taskData)
+        };
+
+        // Exécuter la requête HTTP avec FETCH
+        fetch(app.apiBaseURL + '/tasks/' + taskId, fetchOptions)
+        .then(
+            function(response) {
+                // console.log(response);
+
+                // Si HTTP status code à 204 => (No Content)
+                if (response.status == 204) {
+                    console.log('La mise à jour en bdd a été effectuée');
+
+                    // On récupère l'élément titre de la tâche affiché à l'utilisateur
+                    // - soit avec previousElementSibling => https://developer.mozilla.org/en-US/docs/Web/API/Element/previousElementSibling
+                    const taskTitleLabelElement = taskTitleFieldElement.previousElementSibling;
+                    // - soit directement à partir du taskElement
+                    // const taskTitleLabelElement = taskElement.querySelector('.task__title-label');
+
+                    // Puis remplace son contenu par le nouveau titre
+                    taskTitleLabelElement.textContent = newTaskTitle;
+
+                    // On quitte le "mode édition"
+                    taskElement.classList.remove('task--edit');
+                }
+                else {
+                    alert('La mise à jour a échoué');
+                }
+            }
+        );
     },
 
     /**
@@ -129,19 +188,23 @@ const task = {
      * lors du clic sur le bouton 'complete' de la tâche
      */
     handleCompleteTask: function(evt) {
-        console.log();
+        console.log('Au clic, je passe dans handleCompleteTask');
 
         // Récupération du bouton à l'origine de l'évènement
         const taskCompleteButtonElement = evt.currentTarget;
         // Recherche de la tâche à laquelle appartient ce bouton
         const taskElement = taskCompleteButtonElement.closest('.task');
 
-        // On récupére l'id de la tâche grâce au dataset
+        // Récupération de l'id de la tâche
+        // https://developer.mozilla.org/fr/docs/Web/API/HTMLElement/dataset
         const taskId = taskElement.dataset.id;
-        console.log(taskId);
+
+        // ------------------------------------------------------------------
+        // Mise à jour de la complétion de la tâche en BDD via appel à l'API
+        // ------------------------------------------------------------------
 
         // On stocke les données à transférer
-        const data = {
+        const taskData = {
             completion: 100
         };
         
@@ -150,37 +213,91 @@ const task = {
         const httpHeaders = new Headers();
         httpHeaders.append("Content-Type", "application/json");
         
-
-        // On prépare la configuration de la requête HTTP
-        const config = {
+        // On consomme l'API pour ajouter en DB
+        const fetchOptions = {
             method: 'PATCH',
             mode: 'cors',
             cache: 'no-cache',
-            // On ajoute les headers dans les options 
+            // On ajoute les headers dans les options
             headers: httpHeaders,
-            // On ajoute les données, encodées au format JSON, dans le corps de la requête
-            body: JSON.stringify(data)
+            // On ajoute les données, encodées en JSON, dans le corps de la requête
+            body: JSON.stringify(taskData)
         };
-  
-        // On déclenche la requête HTTP avec fetch
-        fetch(app.apiBaseURL + '/tasks/' + taskId , config)
-        // Ensuite, lorsqu'on reçoit la réponse au format JSON
+        
+        // Exécuter la requête HTTP avec FETCH
+        fetch(app.apiBaseURL + '/tasks/' + taskId, fetchOptions)
         .then(
             function(response) {
                 console.log(response);
                 // Si HTTP status code à 204 => OK
-                if (response.status == 204) {
-                    alert('Modification effectuée');
+                if (response.status == 204) {      
                     
                     // Modification de la complétion de la tâche dans le DOM
-                    task.markTaskAsComplete(taskElement);
+                    task.updateTaskCompletion(taskElement, 100);
                 }
                 else {
-                    alert('La modification a échouée');
+                    alert('La modification a échoué');
                 }
             }
-        )
+        );
+    },
 
+    /**
+     * Méthode gérant le passage d'une tâche terminée à une tâche non terminée
+     * lors du clic sur le bouton 'incomplete' de la tâche
+     */
+    handleUncompleteTask: function(evt) {
+
+        // Récupération du bouton à l'origine de l'évènement
+        const taskUncompleteButtonElement = evt.currentTarget;
+        // Recherche de la tâche à laquelle appartient ce bouton
+        const taskElement = taskUncompleteButtonElement.closest('.task');
+
+        // Récupération de l'id de la tâche
+        // https://developer.mozilla.org/fr/docs/Web/API/HTMLElement/dataset
+        const taskId = taskElement.dataset.id;
+
+        // ------------------------------------------------------------------
+        // Mise à jour de la complétion de la tâche en BDD via appel à l'API
+        // ------------------------------------------------------------------
+
+        // On stocke les données à transférer
+        const taskData = {
+            completion: 0
+        };
+        
+        // On prépare les entêtes HTTP (headers) de la requête
+        // afin de spécifier que les données sont en JSON
+        const httpHeaders = new Headers();
+        httpHeaders.append("Content-Type", "application/json");
+        
+        // On consomme l'API pour ajouter en DB
+        const fetchOptions = {
+            method: 'PATCH',
+            mode: 'cors',
+            cache: 'no-cache',
+            // On ajoute les headers dans les options
+            headers: httpHeaders,
+            // On ajoute les données, encodées en JSON, dans le corps de la requête
+            body: JSON.stringify(taskData)
+        };
+        
+        // Exécuter la requête HTTP avec FETCH
+        fetch(app.apiBaseURL + '/tasks/' + taskId, fetchOptions)
+        .then(
+            function(response) {
+                console.log(response);
+                // Si HTTP status code à 204 => OK
+                if (response.status == 204) {      
+                    
+                    // Modification de la complétion de la tâche dans le DOM
+                    task.updateTaskCompletion(taskElement, 0);
+                }
+                else {
+                    alert('La modification a échoué');
+                }
+            }
+        );
     },
 
     // #############################################################
@@ -200,25 +317,15 @@ const task = {
         // On peut aussi le faire en 1 seule ligne avec replace
         // Doc : https://developer.mozilla.org/fr/docs/Web/API/Element/classList
         taskElement.classList.replace('task--todo','task--complete');
-
-        
     },
 
     /**
-     * Méthode permettant de une tâche incomplète visuellement dans la page
+     * Méthode permettant marquer une tâche incomplète visuellement dans la page
      * 
      * @param {HTMLElement} taskElement 
      */
-     markTaskAsUnComplete: function(taskElement) {
-        // On enlève la classe task--todo
-        // taskElement.classList.remove('task--todo');
-        // On ajoute la classe task--complete
-        // taskElement.classList.add('task--complete');
-        // On peut aussi le faire en 1 seule ligne avec replace
-        // Doc : https://developer.mozilla.org/fr/docs/Web/API/Element/classList
+     markTaskAsUncomplete: function(taskElement) {
         taskElement.classList.replace('task--complete','task--todo');
-
-        
     },
 
     /**
@@ -271,7 +378,6 @@ const task = {
         // On n'oublie pas d'ajouter les écouteurs d'évènement
         // ----------------------------------------------------
         task.bindSingleTaskEvents(newTaskElement);
-
 
         // on retourne l'élément nouvelle tâche
         // /!\ A ce stade, l'élément n'a toujours pas été ajouté dans le DOM /!\
@@ -327,17 +433,18 @@ const task = {
      * Méthode permettant de modifier la complétion d'une tâche
      * 
      * @param {HTMLElement} taskElement 
-     * @param {Number} taskCompletion 
+     * @param {Number} newCompletion 
      */
-    updateTaskCompletion: function(taskElement, taskCompletion) {
+    updateTaskCompletion: function(taskElement, newCompletion) {
+
         if (newCompletion === 100) {
             task.markTaskAsComplete(taskElement);
         } else {
-            task.markTaskAsUnComplete(taskElement);
+            task.markTaskAsUncomplete(taskElement);
         }
 
         // Bonus mettre à jour la barre de progression
+        taskElement.querySelector('.progress-bar__level').style.width = newCompletion + '%';
+    },
 
-        taskElement.querySelector('progress-bar__level').style.width = newCompletion + '%';
-    }
 };
