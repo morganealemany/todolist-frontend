@@ -46,7 +46,7 @@
             for (const singleTask of tasksListFromAPI) {
                 console.log(singleTask);
                 // on crée un nouvel élément "task"
-                const newTaskElement = task.createTaskElement(singleTask.title, singleTask.category.name, singleTask.id, singleTask.completion);
+                const newTaskElement = task.createTaskElement(singleTask.title, singleTask.category.name, singleTask.id, singleTask.completion, singleTask.status);
                 // et on l'insère dans le DOM
                 tasksList.insertTaskIntoTasksList(newTaskElement);
             }
@@ -69,7 +69,7 @@
 
         // On veut ajouter les écouteurs d'évènements sur chaque tâche de la liste
         for (const taskElement of taskElementsList) {
-            console.log(taskElement);
+            // console.log(taskElement);
             task.bindSingleTaskEvents(taskElement);
         }
     },

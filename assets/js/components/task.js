@@ -54,6 +54,11 @@ const task = {
         // Ecoute de l'évènement permettant de rendre une tâche incomplète
         // ----------------------------------------------------------------
         taskElement.querySelector('.task__button--incomplete').addEventListener('click', task.handleUncompleteTask);
+
+        // ----------------------------------------------------------------
+        // Ecoute de l'évènement permettant d'archiver une tâche
+        // ----------------------------------------------------------------
+        taskElement.querySelector('.task__button--archive').addEventListener('click', task.handleArchiveTask);
     },
 
     /**
@@ -300,6 +305,72 @@ const task = {
         );
     },
 
+    /**
+     * 
+     * Méthod handler permettant d'archiver une tâche
+     * 
+     * @param {Event} evt 
+     */
+    handleArchiveTask: function(evt) {
+
+        // On récupère l'élément du DOM sur lequel l'événement a eu lieu
+        const taskArchiveButtonElement = evt.currentTarget;
+        console.log(taskArchiveButtonElement);
+
+        // On récupère l'id de la tâche en cours (celle à laquelle appartient le bouton où l'événement a eu lieu)
+        const taskElement = taskArchiveButtonElement.closest('.task');
+        console.log(taskElement);
+
+        // Récupération de l'id de la tâche en cours
+        const taskId = taskElement.dataset.id;
+        console.log(taskId);
+
+        // Puis on lance la méthode HTTP avec le bon EndPOint : PATCH
+        // ------------------------------------------------------------------
+        // Mise à jour de la complétion de la tâche en BDD via appel à l'API
+        // ------------------------------------------------------------------
+
+        // On stocke les données à transférer
+        const taskData = {
+            status: 2
+        };
+        
+        // On prépare les entêtes HTTP (headers) de la requête
+        // afin de spécifier que les données sont en JSON
+        const httpHeaders = new Headers();
+        httpHeaders.append("Content-Type", "application/json");
+        
+        // On consomme l'API pour ajouter en DB
+        const fetchOptions = {
+            method: 'PATCH',
+            mode: 'cors',
+            cache: 'no-cache',
+            // On ajoute les headers dans les options
+            headers: httpHeaders,
+            // On ajoute les données, encodées en JSON, dans le corps de la requête
+            body: JSON.stringify(taskData)
+        };
+        
+        // Exécuter la requête HTTP avec FETCH
+        fetch(app.apiBaseURL + '/tasks/' + taskId, fetchOptions)
+        .then(
+            function(response) {
+                console.log(response);
+                // Si HTTP status code à 204 => OK
+                if (response.status == 204) {      
+                    alert('L\'archivage a été effectué avec succès')
+                    
+                    // Modification de l'affichage de la tâche
+                    task.updateTaskStatus(taskElement, 2);
+                }
+                else {
+                    alert('L\'archivage a échoué');
+                }
+            }
+        );
+
+    },
+
     // #############################################################
     //                            DOM
     // #############################################################
@@ -338,7 +409,7 @@ const task = {
      * 
      * @return {HTMLElement}
      */
-    createTaskElement: function(newTaskTitle, newTaskCategoryName, newTaskId, newTaskCompletion) {
+    createTaskElement: function(newTaskTitle, newTaskCategoryName, newTaskId, newTaskCompletion, newTaskStatus) {
 
         // --------------------------------------------------
         // Création du clone
@@ -373,6 +444,9 @@ const task = {
 
         // Complétion de la tâche
         task.updateTaskCompletion(newTaskElement, newTaskCompletion);
+
+        // Statut de la tâche
+        task.updateTaskStatus(newTaskElement, newTaskStatus);
 
         // ---------------------------------------------------- 
         // On n'oublie pas d'ajouter les écouteurs d'évènement
@@ -446,5 +520,20 @@ const task = {
         // Bonus mettre à jour la barre de progression
         taskElement.querySelector('.progress-bar__level').style.width = newCompletion + '%';
     },
+
+    updateTaskStatus: function(taskElement, newStatus) {
+
+        // Si le statut de la tâche est égal à 2 (archivée)
+        if (newStatus === 2) {
+            // On ajoute la classe task--archive à l'élément pour modifier l'affichage
+            taskElement.classList.add('task--archive');
+        }
+        // Si le statut de la tâche est égale à 1 (non archivée)
+        if (newStatus === 1) {
+            // On supprime la classe task--archive de l'élément pour modifier l'affichage
+            taskElement.classList.remove('task--archive');
+        }
+    },
+
 
 };
