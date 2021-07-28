@@ -135,27 +135,6 @@ const task = {
         const taskCompleteButtonElement = evt.currentTarget;
         // Recherche de la tâche à laquelle appartient ce bouton
         const taskElement = taskCompleteButtonElement.closest('.task');
-        // Modification de la complétion de la tâche dans le DOM
-        task.markTaskAsComplete(taskElement);
-    },
-
-    // #############################################################
-    //                            DOM
-    // #############################################################
-
-    /**
-     * Méthode permettant de terminer/compléter une tâche visuellement dans la page
-     * 
-     * @param {HTMLElement} taskElement 
-     */
-    markTaskAsComplete: function(taskElement) {
-        // On enlève la classe task--todo
-        // taskElement.classList.remove('task--todo');
-        // On ajoute la classe task--complete
-        // taskElement.classList.add('task--complete');
-        // On peut aussi le faire en 1 seule ligne avec replace
-        // Doc : https://developer.mozilla.org/fr/docs/Web/API/Element/classList
-        taskElement.classList.replace('task--todo','task--complete');
 
         // On récupére l'id de la tâche grâce au dataset
         const taskId = taskElement.dataset.id;
@@ -191,15 +170,38 @@ const task = {
                 console.log(response);
                 // Si HTTP status code à 204 => OK
                 if (response.status == 204) {
-                    alert('ajout effectué');
-
-                    // TODO selon ce qu'on veut faire une fois la réponse récupérée
+                    alert('Modification effectuée');
+                    
+                    // Modification de la complétion de la tâche dans le DOM
+                    task.markTaskAsComplete(taskElement);
                 }
                 else {
-                    alert('L\'ajout a échoué');
+                    alert('La modification a échouée');
                 }
             }
         )
+
+    },
+
+    // #############################################################
+    //                            DOM
+    // #############################################################
+
+    /**
+     * Méthode permettant de terminer/compléter une tâche visuellement dans la page
+     * 
+     * @param {HTMLElement} taskElement 
+     */
+    markTaskAsComplete: function(taskElement) {
+        // On enlève la classe task--todo
+        // taskElement.classList.remove('task--todo');
+        // On ajoute la classe task--complete
+        // taskElement.classList.add('task--complete');
+        // On peut aussi le faire en 1 seule ligne avec replace
+        // Doc : https://developer.mozilla.org/fr/docs/Web/API/Element/classList
+        taskElement.classList.replace('task--todo','task--complete');
+
+        
     },
 
     /**

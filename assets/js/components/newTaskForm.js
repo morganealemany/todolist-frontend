@@ -63,7 +63,7 @@ const newTaskForm = {
         const newTaskCategoryName = categoryElement.value;
         const newCategoryId = categoryElement.selectedIndex;
         console.log(newCategoryId);
-
+        // TODO lancer la requête HTTP
         // Création de la nouvelle tâche
         const newTaskElement = task.createTaskElement(newTaskTitle, newTaskCategoryName);
 
