@@ -12,6 +12,7 @@
         // dans createTaskElement
         // tasksList.bindAllTasksEvents();
         tasksList.loadTasksFromAPI();
+        
     },
 
     // ###############################################################
@@ -44,13 +45,29 @@
 
             // Pour chaque tâche de la liste retournée
             for (const singleTask of tasksListFromAPI) {
-                console.log(singleTask);
+                // console.log(singleTask);
                 // on crée un nouvel élément "task"
                 const newTaskElement = task.createTaskElement(singleTask.title, singleTask.category.name, singleTask.id, singleTask.completion, singleTask.status);
+                console.log(newTaskElement);
+                // On veille à cacher les tâches archivées par défaut
+                tasksList.hideArchiveTasks(newTaskElement);
                 // et on l'insère dans le DOM
                 tasksList.insertTaskIntoTasksList(newTaskElement);
             }
         });
+    },
+
+    /**
+     * Méthode permettant de cacher une tâche si elle est archivée
+     * 
+     * @param {HTMLElement} taskElement 
+     */
+    hideArchiveTasks: function(taskElement) {
+        // Si la tâche en cours a une classe 'task--archive'
+        if (taskElement.classList.contains('task--archive')) {
+            // Alors on la cache avec un display: none
+            taskElement.style.display = 'none';
+        }
     },
 
     // ####################################################################
